@@ -1,0 +1,11 @@
+:root {
+  --black: black;
+  --lt-grey: #f8f8f8;
+  --med-grey: #999;
+  --dk-grey: #444;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica", "Roboto", "Droid Sans", "Arial", sans-serif;
+  margin: 5px;
+}
