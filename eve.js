@@ -28,28 +28,32 @@ class Person {
 
   printify() {
     let div = document.createElement("DIV");
-    div.createTextNode(this.name);
-    div.createTextNode("of " + this.mother + " and " + this.father);
+    div.appendChild(document.createTextNode(this.name));
+    div.appendChild(document.createTextNode("of " + this.mother + " and " + this.father));
     document.getElementById("main").appendChild(div);
   }
 }
 
 class Tree {
   constructor(raw) {
-    this.directory = {};
-    console.log(raw);
+    // this.directory = {};
+    // console.log(raw);
     let data = d3.tsvParse(raw);
     console.log(data);
-    for (const row in data) {
-      this.directory[row["name"]] = new Person(row);
-    }
+
+    this.tree = d3.stratify()
+    .id(function(d) { return d.name; })
+    .parentId(function(d) { return d.father; })
+    (data);
+
+    // for (const row in data) {
+    //   this.directory[row["name"]] = new Person(row);
+    // }
     console.log("Created new Tree.");
   }
 
   printify() {
-    for (const person in this.directory) {
-      person.printify();
-    }
+    console.log(this.tree);
   }
 }
 
