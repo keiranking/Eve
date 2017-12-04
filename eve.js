@@ -1,7 +1,7 @@
 // Eve
-// ------------------------------------------------------------------------
 // Copyright 2017 Keiran King
 
+// LICENSE --------------------------------------------------------------------
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // (https://www.apache.org/licenses/LICENSE-2.0)
@@ -11,7 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// ------------------------------------------------------------------------
+
+// ----------------------------------------------------------------------------
 console.log(d3.version);
 let t;
 
@@ -39,7 +40,6 @@ class Tree {
     // this.directory = {};
     // console.log(raw);
     let data = d3.tsvParse(raw);
-    console.log(data);
 
     this.tree = d3.stratify()
     .id(function(d) { return d.name; })
@@ -53,7 +53,18 @@ class Tree {
   }
 
   printify() {
+    // let tree = d3.tree();
+    // let visualTree = tree(this.tree);
+    let root = document.createTextNode(this.tree.id);
+    document.getElementById("main").appendChild(root);
     console.log(this.tree);
+    console.log(this.tree.id, this.tree.children);
+    if (this.tree.children) {
+      for (let i = 0; i < this.tree.children.length; i++) {
+        let child = document.createTextNode(this.tree.children[i].id);
+        document.getElementById("main").appendChild(child);
+      }
+    }
   }
 }
 
