@@ -41,11 +41,10 @@ body {
 }
 
 #filebar button:hover {
-
   opacity: 0.9;
-  box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.15);
-    -moz-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.15);
-    -webkit-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 6px 0 rgba(255, 0, 255, 0.15);
+    -moz-box-shadow: 0 0 6px 0 rgba(255, 0, 255, 0.15);
+    -webkit-box-shadow: 0 0 10px 0 rgba(255, 0, 255, 0.3);
 }
 
 #filebar button:hover:after {
@@ -56,11 +55,13 @@ body {
   /*background: var(--dk-grey);*/
   color: var(--callout-button);
   font-size: 9pt;
-  line-height: 40px;
-  font-weight: 500;
+  /*line-height: 40px;*/
+  font-weight: 700;
   position: absolute;
   left: 110%;
-  top: 0;
+  top: 50%;
+  height: 18px;
+  margin-top: -13px;
   white-space: nowrap;
   z-index: 20;
 }
