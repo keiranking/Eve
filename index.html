@@ -5,7 +5,12 @@
 </head>
 <body>
   <div id="main">
-    <input id="open-tree" type="file" accept=".tsv" onchange="openFile(event)"/>
+    <input id="open-input" class="hidden" type="file" accept=".tsv" onchange="openFile(event)"/>
+  </div>
+  <div id="filebar">
+    <button id="open-file" type="button" data-tooltip="Open file (.tsv)" onclick="document.getElementById('open-input').click()">
+      <i class="fa fa-plus fa-fw" aria-hidden="true"></i>
+    </button>
   </div>
   <script src="https://d3js.org/d3.v4.min.js"></script></body>
   <script src="eve.js"></script>

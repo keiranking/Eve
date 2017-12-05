@@ -3,9 +3,69 @@
   --lt-grey: #f8f8f8;
   --med-grey: #999;
   --dk-grey: #444;
+  --callout-button: purple;
 }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica", "Roboto", "Droid Sans", "Arial", sans-serif;
   margin: 5px;
+}
+
+#filebar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 10px;
+}
+
+#filebar button {
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  background-color: var(--callout-button);
+  border: none;
+  color: white;
+  text-align: center;
+  font-size: 16pt;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  /*user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;*/
+}
+
+#filebar button:focus {
+  outline: none;
+}
+
+#filebar button:hover {
+
+  opacity: 0.9;
+  box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.15);
+    -moz-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.15);
+    -webkit-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
+}
+
+#filebar button:hover:after {
+  content: attr(data-tooltip);
+  margin: 0;
+  padding: 4px;
+  border-radius: 2px;
+  /*background: var(--dk-grey);*/
+  color: var(--callout-button);
+  font-size: 9pt;
+  line-height: 40px;
+  font-weight: 500;
+  position: absolute;
+  left: 110%;
+  top: 0;
+  white-space: nowrap;
+  z-index: 20;
+}
+
+
+.hidden {
+  display: none;
 }
