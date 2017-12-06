@@ -14,6 +14,7 @@
 
 // ----------------------------------------------------------------------------
 console.log(d3.version);
+let treeTable = document.getElementById("tree-table");
 let t;
 
 class Person {
@@ -37,26 +38,65 @@ class Person {
 
 class Tree {
   constructor(raw) {
-    // this.directory = {};
-    // console.log(raw);
     let data = d3.tsvParse(raw);
-
+    this.currentRow = 0;
+    this.currentCol = 0;
+    this.rows = 0;
+    this.generations = 5;
     this.tree = d3.stratify()
     .id(function(d) { return d.name; })
     .parentId(function(d) { return d.father; })
     (data);
 
-    // for (const row in data) {
-    //   this.directory[row["name"]] = new Person(row);
-    // }
+    for (let i = 0; i < 50; i++) {
+      this.addRow();
+    }
     console.log("Created new Tree.");
+  }
+
+  addRow() {
+  	let row = document.createElement("TR");
+  	row.setAttribute("data-row", this.rows);
+    this.rows++;
+  	treeTable.appendChild(row);
+
+		for (let j = 0; j < this.generations; j++) {
+		    let col = document.createElement("TD");
+        col.setAttribute("data-col", j);
+
+        let name = document.createElement("DIV");
+        name.setAttribute("class", "name");
+        name.appendChild(document.createTextNode(""));
+
+        let dates = document.createElement("DIV");
+        dates.setAttribute("class", "dates");
+        dates.appendChild(document.createTextNode(""));
+
+        col.appendChild(name);
+        col.appendChild(dates);
+        row.appendChild(col);
+      }
+  }
+
+  plotTree(person) {
+    console.log("Plotting", person.id, "at", this.currentRow, this.currentCol);
+    treeTable.querySelector('[data-row="' + this.currentRow + '"]').querySelector('[data-col="' + this.currentCol + '"]').firstChild.innerHTML = person.id;
+    if (!person.children) {
+      this.currentRow++;
+      return;
+    } else {
+      this.currentCol++;
+      for (const child of person.children) {
+        this.plotTree(child);
+      }
+    }
   }
 
   printify() {
     // let tree = d3.tree();
     // let visualTree = tree(this.tree);
     let root = document.createTextNode(this.tree.id);
-    document.getElementById("main").appendChild(root);
+    treeTable.querySelector('[data-row="' + 0 + '"]').querySelector('[data-col="' + 0 + '"]').appendChild(root);
     console.log(this.tree);
     console.log(this.tree.id, this.tree.children);
     if (this.tree.children) {
@@ -78,7 +118,7 @@ function openFile(e) {
     const raw = e.target.result;
     t = new Tree(raw);
     console.log("Opened " + file.name);
-    t.printify();
+    t.plotTree(t.tree);
   };
   reader.readAsText(file);
 }
