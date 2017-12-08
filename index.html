@@ -4,17 +4,17 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
 </head>
 <body>
+  <div id="toolbar">
+    <button id="open-file" type="button" data-tooltip="Open file (.tsv)" onclick="document.getElementById('open-input').click()">
+      <i class="fa fa-plus fa-fw" aria-hidden="true"></i>
+    </button>
+  </div>
   <div id="main">
     <div id="tree">
       <table id="tree-table">
       </table>
     </div>
     <input id="open-input" class="hidden" type="file" accept=".tsv" onchange="openFile(event)"/>
-  </div>
-  <div id="filebar">
-    <button id="open-file" type="button" data-tooltip="Open file (.tsv)" onclick="document.getElementById('open-input').click()">
-      <i class="fa fa-plus fa-fw" aria-hidden="true"></i>
-    </button>
   </div>
   <script src="https://d3js.org/d3.v4.min.js"></script></body>
   <script src="eve.js"></script>

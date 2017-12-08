@@ -39,8 +39,6 @@ class Person {
 class Tree {
   constructor(raw) {
     let data = d3.tsvParse(raw);
-    this.currentRow = 0;
-    this.currentCol = 0;
     this.rows = 0;
     this.generations = 5;
     this.tree = d3.stratify()
@@ -78,18 +76,18 @@ class Tree {
       }
   }
 
-  plotTree(person) {
-    console.log("Plotting", person.id, "at", this.currentRow, this.currentCol);
-    treeTable.querySelector('[data-row="' + this.currentRow + '"]').querySelector('[data-col="' + this.currentCol + '"]').firstChild.innerHTML = person.id;
-    if (!person.children) {
-      this.currentRow++;
-      return;
-    } else {
-      this.currentCol++;
-      for (const child of person.children) {
-        this.plotTree(child);
+  plotTree(person, row, col) {
+    console.log("Plotting", person.id, "at", row, col);
+    treeTable.querySelector('[data-row="' + row + '"]').querySelector('[data-col="' + col + '"]').firstChild.innerHTML = person.id;
+    let count = 0;
+    if (person.children) {
+      for (let i = 0; i < person.children.length; i++) {
+        count += this.plotTree(person.children[i], row + count, col + 1);
       }
+    } else {
+      count++;
     }
+    return count;
   }
 
   printify() {
@@ -118,7 +116,7 @@ function openFile(e) {
     const raw = e.target.result;
     t = new Tree(raw);
     console.log("Opened " + file.name);
-    t.plotTree(t.tree);
+    t.plotTree(t.tree, 0, 0);
   };
   reader.readAsText(file);
 }
