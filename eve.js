@@ -12,11 +12,98 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// ----------------------------------------------------------------------------
-console.log(d3.version);
-let treeTable = document.getElementById("tree-table");
-let t;
+// CONSTANTS ------------------------------------------------------------------
+let UNKNOWN = "unknown";
 
+// DATA TYPE FUNCTIONS --------------------------------------------------------
+String.prototype.toDate = function() { // convert date string to Date
+  if (!this) { // empty string is not a date
+    return false;
+  }
+  if (this.trim() == UNKNOWN) { // Unknown date
+    return true;
+  }
+  let arr = this.trim().split(/\s'*|-|\/|\./); // splits on spaces, dots, dashes, slashes, apostrophes
+  let day, month, year;
+  if (arr.length) {
+    year = Number(arr.pop());
+    if (isNaN(year)) {
+      return true; // Unknown date
+    }
+    if (year < 1700) {
+      year += (year > new Date().getFullYear() - 2000) ? 1900 : 2000; // convert YY to YYYY
+    }
+  }
+  if (arr.length) {
+    month = arr.pop();
+    if (isNaN(Number(month))) {
+      month = month.slice(0,3).toLowerCase();
+      switch (month) { // convert Mth to MM
+        case "jan":
+          month = 0;
+          break;
+        case "feb":
+          month = 1;
+          break;
+        case "mar":
+          month = 2;
+          break;
+        case "apr":
+          month = 3;
+          break;
+        case "may":
+          month = 4;
+          break;
+        case "jun":
+          month = 5;
+          break;
+        case "jul":
+          month = 6;
+          break;
+        case "aug":
+          month = 7;
+          break;
+        case "sep":
+          month = 8;
+          break;
+        case "oct":
+          month = 9;
+          break;
+        case "nov":
+          month = 10;
+          break;
+        case "dec":
+          month = 11;
+          break;
+        default:
+          return true; // month is not a number and not a recognized month
+          break;
+      }
+    } else {
+      month = Number(month);
+      month--; // JavaScript Date uses 0 to 11 for months
+    }
+  } else {
+    month = 0; // Unknown month becomes January
+  }
+  if (arr.length) {
+    day = Number(arr.pop());
+  } else {
+    day = 1; // Unknown day becomes 1st of month
+  }
+  // console.log(this.toString());
+  return new Date(year, month, day);
+}
+
+console.log("unknown ".toDate());
+console.log("1983 ".toDate());
+console.log("05 Aug 1974".toDate());
+console.log("August '74".toDate());
+console.log("9-11-03".toDate());
+console.log("29.11.2017".toDate());
+console.log("4/3/54".toDate());
+
+// CLASSES --------------------------------------------------------------------
 class Person {
   constructor(p) {
     this.name = p["name"];
@@ -76,13 +163,13 @@ class Tree {
       }
   }
 
-  plotTree(person, row, col) {
+  plot(person, row, col) {
     console.log("Plotting", person.id, "at", row, col);
     treeTable.querySelector('[data-row="' + row + '"]').querySelector('[data-col="' + col + '"]').firstChild.innerHTML = person.id;
     let count = 0;
     if (person.children) {
       for (let i = 0; i < person.children.length; i++) {
-        count += this.plotTree(person.children[i], row + count, col + 1);
+        count += this.plot(person.children[i], row + count, col + 1);
       }
     } else {
       count++;
@@ -90,22 +177,16 @@ class Tree {
     return count;
   }
 
-  printify() {
-    // let tree = d3.tree();
-    // let visualTree = tree(this.tree);
-    let root = document.createTextNode(this.tree.id);
-    treeTable.querySelector('[data-row="' + 0 + '"]').querySelector('[data-col="' + 0 + '"]').appendChild(root);
-    console.log(this.tree);
-    console.log(this.tree.id, this.tree.children);
-    if (this.tree.children) {
-      for (let i = 0; i < this.tree.children.length; i++) {
-        let child = document.createTextNode(this.tree.children[i].id);
-        document.getElementById("main").appendChild(child);
-      }
+  convertDates(people) {
+    let sorted = [];
+    for (let i = 0; i < people.length; i++) {
+      let dob = people[i].birth;
+      let dod = people[i].death;
     }
   }
 }
 
+// FUNCTIONS ------------------------------------------------------------------
 function openFile(e) {
   let file = e.target.files[0];
   if (!file) {
@@ -116,7 +197,12 @@ function openFile(e) {
     const raw = e.target.result;
     t = new Tree(raw);
     console.log("Opened " + file.name);
-    t.plotTree(t.tree, 0, 0);
+    t.plot(t.tree, 0, 0);
   };
   reader.readAsText(file);
 }
+
+// MAIN --------------------------------------------------------------------
+console.log(d3.version);
+let treeTable = document.getElementById("tree-table");
+let t;

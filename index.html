@@ -5,9 +5,21 @@
 </head>
 <body>
   <div id="toolbar">
-    <button id="open-file" type="button" data-tooltip="Open file (.tsv)" onclick="document.getElementById('open-input').click()">
+    <button id="import" type="button" data-tooltip="Import" onclick="document.getElementById('open-input').click()">
       <i class="fa fa-plus fa-fw" aria-hidden="true"></i>
     </button>
+    <button id="export" class="disabled" type="button" data-tooltip="">
+      <i class="fa fa-download fa-fw" aria-hidden="true"></i>
+    </button>
+    <div id="export-menu" class="menu hidden">
+      <h4>Export as:</h4>
+      <ul>
+        <li>Tab-separated values (.tsv)</li>
+        <li>Comma-separated values (.csv)</li>
+        <li>Image (.png)</li>
+        <li>PDF document (.pdf)</li>
+      </ul>
+    </div>
   </div>
   <div id="main">
     <div id="tree">
