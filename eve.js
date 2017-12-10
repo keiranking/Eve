@@ -116,29 +116,28 @@ class Person {
   }
 }
 
-class Tree {
-  constructor(raw) {
+class Family {
+  constructor(raw) { // takes tab-separated value data labeled 'name', 'birth', 'death', 'mother', 'father'
+    this.directory = {};
     let data = d3.tsvParse(raw);
     for (let i = 0; i < data.length; i++) {
+      this.directory[data[i]['name']] = new Person(data[i]);
       data[i] = new Person(data[i]);
     }
     data.sort(function(a, b) {
-      // let x = a.birth === true ? new Date(1900, 0, 1) : a.birth;
-      // let y = b.birth === true ? new Date(1900, 0, 1) : b.birth;
-      // return x - y;
       return a.birth - b.birth;
     });
     this.rows = 0;
-    this.generations = 5;
     this.tree = d3.stratify()
     .id(function(person) { return person.name; })
     .parentId(function(person) { return person.father; })
     (data);
+    this.generations = this.tree.height + 1;
 
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < data.length; i++) {
       this.addRow();
     }
-    console.log("Created new Tree.");
+    console.log("New Family.");
   }
 
   addRow() {
@@ -166,7 +165,7 @@ class Tree {
   }
 
   plot(person, row, col) {
-    console.log("Plotting", person.id, "at", row, col);
+    console.log(person.id, "at", row, col);
     treeTable.querySelector('[data-row="' + row + '"]').querySelector('[data-col="' + col + '"]').firstChild.innerHTML = person.id;
     let count = 0;
     if (person.children) {
@@ -177,14 +176,6 @@ class Tree {
       count++;
     }
     return count;
-  }
-
-  convertDates(people) {
-    let sorted = [];
-    for (let i = 0; i < people.length; i++) {
-      let dob = people[i].birth;
-      let dod = people[i].death;
-    }
   }
 }
 
@@ -197,7 +188,7 @@ function openFile(e) {
   let reader = new FileReader();
   reader.onload = function(e) {
     const raw = e.target.result;
-    t = new Tree(raw);
+    t = new Family(raw);
     console.log("Opened " + file.name);
     t.plot(t.tree, 0, 0);
   };
@@ -205,6 +196,6 @@ function openFile(e) {
 }
 
 // MAIN --------------------------------------------------------------------
-console.log(d3.version);
+console.log("Using d3 version " + d3.version);
 let treeTable = document.getElementById("tree-table");
 let t;
