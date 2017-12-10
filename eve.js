@@ -107,30 +107,32 @@ console.log("4/3/54".toDate());
 class Person {
   constructor(p) {
     this.name = p["name"];
-    this.surname = p["name"];
-    this.birth = new Date(p["birth"]);
-    this.death = p["death"] == "" ? undefined : new Date(p["death"]);
+    this.surname = p["name"].split(" ").pop();
+    this.birth = p["birth"].toDate();
+    this.death = p["death"].toDate();
     this.mother = p["mother"];
     this.father = p["father"];
     this.partners = p["partners"];
-  }
-
-  printify() {
-    let div = document.createElement("DIV");
-    div.appendChild(document.createTextNode(this.name));
-    div.appendChild(document.createTextNode("of " + this.mother + " and " + this.father));
-    document.getElementById("main").appendChild(div);
   }
 }
 
 class Tree {
   constructor(raw) {
     let data = d3.tsvParse(raw);
+    for (let i = 0; i < data.length; i++) {
+      data[i] = new Person(data[i]);
+    }
+    data.sort(function(a, b) {
+      // let x = a.birth === true ? new Date(1900, 0, 1) : a.birth;
+      // let y = b.birth === true ? new Date(1900, 0, 1) : b.birth;
+      // return x - y;
+      return a.birth - b.birth;
+    });
     this.rows = 0;
     this.generations = 5;
     this.tree = d3.stratify()
-    .id(function(d) { return d.name; })
-    .parentId(function(d) { return d.father; })
+    .id(function(person) { return person.name; })
+    .parentId(function(person) { return person.father; })
     (data);
 
     for (let i = 0; i < 50; i++) {
