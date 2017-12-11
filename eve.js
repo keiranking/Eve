@@ -135,6 +135,7 @@ class Family {
       this.dir[data[i]['name']] = new Person(data[i]);
       this.addRow();
     }
+    this.updateRoster();
     this.generateChildren();
     console.log("New Family.");
   }
@@ -177,6 +178,18 @@ class Family {
       }
     }
     console.log("Children generated.");
+  }
+
+  updateRoster() {
+    let roster = Object.keys(this.dir).sort();
+    let r = document.getElementById("roster");
+    r.innerHTML = "";
+    for (const name of roster) {
+      let option = document.createElement("OPTION");
+      option.value = name;
+      option.innerHTML = name;
+      r.appendChild(option);
+    }
   }
 
   plot(name, row, col) {
