@@ -5,20 +5,27 @@
 </head>
 <body>
   <div id="toolbar">
-    <button id="import" type="button" data-tooltip="Import" onclick="document.getElementById('open-input').click()">
-      <i class="fa fa-plus fa-fw" aria-hidden="true"></i>
-    </button>
-    <button id="export" class="disabled" type="button" data-tooltip="">
-      <i class="fa fa-download fa-fw" aria-hidden="true"></i>
-    </button>
-    <div id="export-menu" class="menu hidden">
-      <h4>Export as:</h4>
-      <ul>
-        <li>Tab-separated values (.tsv)</li>
-        <li>Comma-separated values (.csv)</li>
-        <li>Image (.png)</li>
-        <li>PDF document (.pdf)</li>
-      </ul>
+    <div class="left">
+      <select id="directory">
+        <option value="" disabled="disabled">Directory:</option>
+      </select>
+    </div>
+    <div class="right">
+      <button id="import" type="button" data-tooltip="Import" onclick="document.getElementById('open-input').click()">
+        <i class="fa fa-plus fa-fw" aria-hidden="true"></i>Import...
+      </button>
+      <button id="export" class="disabled" type="button" data-tooltip="">
+        <i class="fa fa-download fa-fw" aria-hidden="true"></i>Export as &#9662;
+      </button>
+      <div id="export-menu" class="menu hidden">
+        <h4>Export as:</h4>
+        <ul>
+          <li>Tab-separated values (.tsv)</li>
+          <li>Comma-separated values (.csv)</li>
+          <li>Image (.png)</li>
+          <li>PDF document (.pdf)</li>
+        </ul>
+      </div>
     </div>
   </div>
   <div id="main">
