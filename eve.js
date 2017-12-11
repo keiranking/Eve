@@ -104,13 +104,13 @@ Array.prototype.contains = function(obj) {
   return false;
 }
 
-console.log("unknown ".toDate());
-console.log("1983 ".toDate());
-console.log("05 Aug 1974".toDate());
-console.log("August '74".toDate());
-console.log("9-11-03".toDate());
-console.log("29.11.2017".toDate());
-console.log("4/3/54".toDate());
+// console.log("unknown ".toDate());
+// console.log("1983 ".toDate());
+// console.log("05 Aug 1974".toDate());
+// console.log("August '74".toDate());
+// console.log("9-11-03".toDate());
+// console.log("29.11.2017".toDate());
+// console.log("4/3/54".toDate());
 
 // CLASSES --------------------------------------------------------------------
 class Person {
@@ -122,8 +122,7 @@ class Person {
     this.mother = p["mother"];
     this.father = p["father"];
     this.partners = p["partners"];
-    this.isMaternallyRelated = false;
-    this.isPaternallyRelated = false;
+    this.children = [];
   }
 }
 
@@ -131,36 +130,13 @@ class Family {
   constructor(raw) { // takes tab-separated value data labeled 'name', 'birth', 'death', 'mother', 'father'
     this.rows = 0;
     this.dir = {};
-    // this.root = "Noel King";
-    // this.descendants = [];
-
     let data = d3.tsvParse(raw);
     for (let i = 0; i < data.length; i++) {
       this.dir[data[i]['name']] = new Person(data[i]);
-      // data[i] = new Person(data[i]);
-    }
-    this.generateDescendants(this.root);
-    this.descendants.sort(function(a, b) {
-      return a.birth - b.birth;
-    });
-    // this.tree = d3.stratify()
-    // .id(function(person) { return person.name; })
-    // .parentId(function(person) {
-    //   if (this.descendants.contains(this.dir[person.mother])) {
-    //     return person.mother;
-    //   } else {
-    //     return person.father;
-    //   }
-    // })
-    // (this.descendants);
-
-    this.generations = this.tree.height + 1;
-
-    for (let i = 0; i < data.length; i++) {
       this.addRow();
     }
+    this.generateChildren();
     console.log("New Family.");
-    // console.log(this.tree.id);
   }
 
   addRow() {
@@ -169,7 +145,7 @@ class Family {
     this.rows++;
   	treeTable.appendChild(row);
 
-		for (let j = 0; j < this.generations; j++) {
+		for (let j = 0; j < 5; j++) {
 		    let col = document.createElement("TD");
         col.setAttribute("data-col", j);
 
@@ -187,35 +163,29 @@ class Family {
       }
   }
 
-  generateDescendants(root) {
-    if (!this.dir[root]) {
-      return;
-    } else {
-      this.descendants.push(this.dir[root]);
-    }
-    for (let person in this.dir) {
-      if (person.mother == root || person.father == root) {
-        this.descendants.push(person);
-        this.generateDescendants(person);
+  generateChildren() {
+    console.log("Generating children...");
+    let names = Object.keys(this.dir).sort(function(a, b) { // list of names, sorted by age
+      return this.dir[a].birth - this.dir[b].birth;
+    }.bind(this));
+    for (const name of names) {
+      for (const candidate of names) {
+        if (this.dir[candidate].mother == name || this.dir[candidate].father == name) {
+          this.dir[name].children.push(candidate);
+          console.log(name + " begat " + candidate + ".");
+        }
       }
     }
+    console.log("Children generated.");
   }
 
-  // isDirectlyRelated(descendant, ancestor) {
-  //   if (descendant.name == ancestor.name || descendant.mother == ancestor.name || descendant.father == ancestor.name) {
-  //     return true;
-  //   }
-  //   return isDirectlyRelated(this.dir[descendant.mother],ancestor) ||
-  //     isDirectlyRelated(this.dir[descendant.father],ancestor);
-  // }
-
-  plot(person, row, col) {
-    console.log(person.id, "at", row, col);
-    treeTable.querySelector('[data-row="' + row + '"]').querySelector('[data-col="' + col + '"]').firstChild.innerHTML = person.id;
+  plot(name, row, col) {
+    console.log(name, "at", row, col);
+    treeTable.querySelector('[data-row="' + row + '"]').querySelector('[data-col="' + col + '"]').firstChild.innerHTML = name;
     let count = 0;
-    if (person.children) {
-      for (let i = 0; i < person.children.length; i++) {
-        count += this.plot(person.children[i], row + count, col + 1);
+    if (this.dir[name].children.length) {
+      for (let i = 0; i < this.dir[name].children.length; i++) {
+        count += this.plot(this.dir[name].children[i], row + count, col + 1);
       }
     } else {
       count++;
@@ -232,15 +202,14 @@ function openFile(e) {
   }
   let reader = new FileReader();
   reader.onload = function(e) {
-    const raw = e.target.result;
-    t = new Family(raw);
+    f = new Family(e.target.result);
     console.log("Opened " + file.name);
-    t.plot(t.tree, 0, 0);
+    f.plot("Noel King", 0, 0);
   };
   reader.readAsText(file);
 }
 
 // MAIN --------------------------------------------------------------------
-console.log("Using d3 version " + d3.version);
+console.log("D3 v" + d3.version);
 let treeTable = document.getElementById("tree-table");
 let t;
