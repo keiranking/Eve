@@ -13,7 +13,16 @@
 // limitations under the License.
 
 // CONSTANTS ------------------------------------------------------------------
-let UNKNOWN = "unknown";
+const UNKNOWN = "unknown";
+let PIXEL_RATIO = window.devicePixelRatio || 2;
+const ROW_HEIGHT = 25 * PIXEL_RATIO;
+const COL_WIDTH = 180 * PIXEL_RATIO;
+const X_OFFSET = 0 * PIXEL_RATIO;
+const Y_OFFSET = 30 * PIXEL_RATIO;
+// GLOBAL DOM VARIABLES -------------------------------------------------------
+let canvas = document.getElementById("canvas");
+let ctx = canvas.getContext('2d');
+let treeTable = document.getElementById("tree-table");
 
 // DATA TYPE FUNCTIONS --------------------------------------------------------
 String.prototype.toDate = function() { // convert date string to Date
@@ -192,12 +201,15 @@ class Family {
   }
 
   plot(name, row, col) {
+    ctx.font = (12 * PIXEL_RATIO) + "pt 'Libre Franklin', Helvetica, Arial, sans-serif";
+    ctx.baseline = "middle";
     // console.log(treeTable.children.length);
     while (treeTable.children.length <= row) {
       this.addRow();
     }
     console.log(name, "at", row, col);
     treeTable.querySelector('[data-row="' + row + '"]').querySelector('[data-col="' + col + '"]').firstChild.innerHTML = name;
+    ctx.fillText(name, X_OFFSET + (col * COL_WIDTH), Y_OFFSET + (row * ROW_HEIGHT));
     let count = 0;
     if (this.dir[name].children.length) {
       for (let i = 0; i < this.dir[name].children.length; i++) {
@@ -234,6 +246,9 @@ function updateRoot() {
 
 // MAIN --------------------------------------------------------------------
 console.log("D3 v" + d3.version);
-let treeTable = document.getElementById("tree-table");
+canvas.width = 900 * PIXEL_RATIO;
+canvas.height = 900 * PIXEL_RATIO;
+canvas.style.width = 900;
+canvas.style.height = 900;
 let t;
 let f;
