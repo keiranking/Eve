@@ -128,12 +128,11 @@ class Person {
 
 class Family {
   constructor(raw) { // takes tab-separated value data labeled 'name', 'birth', 'death', 'mother', 'father'
-    this.rows = 0;
     this.dir = {};
     let data = d3.tsvParse(raw);
     for (let i = 0; i < data.length; i++) {
       this.dir[data[i]['name']] = new Person(data[i]);
-      this.addRow();
+      // this.addRow();
     }
     this.updateRoster();
     this.generateChildren();
@@ -142,26 +141,26 @@ class Family {
 
   addRow() {
   	let row = document.createElement("TR");
-  	row.setAttribute("data-row", this.rows);
-    this.rows++;
+  	row.setAttribute("data-row", treeTable.children.length);
   	treeTable.appendChild(row);
 
 		for (let j = 0; j < 5; j++) {
-		    let col = document.createElement("TD");
-        col.setAttribute("data-col", j);
+	    let col = document.createElement("TD");
+      col.setAttribute("data-col", j);
 
-        let name = document.createElement("DIV");
-        name.setAttribute("class", "name");
-        name.appendChild(document.createTextNode(""));
+      let name = document.createElement("DIV");
+      name.setAttribute("class", "name");
+      name.appendChild(document.createTextNode(""));
 
-        let dates = document.createElement("DIV");
-        dates.setAttribute("class", "dates");
-        dates.appendChild(document.createTextNode(""));
+      let dates = document.createElement("DIV");
+      dates.setAttribute("class", "dates");
+      dates.appendChild(document.createTextNode(""));
 
-        col.appendChild(name);
-        col.appendChild(dates);
-        row.appendChild(col);
-      }
+      col.appendChild(name);
+      col.appendChild(dates);
+      row.appendChild(col);
+    }
+    console.log("New row.");
   }
 
   generateChildren() {
@@ -193,6 +192,10 @@ class Family {
   }
 
   plot(name, row, col) {
+    // console.log(treeTable.children.length);
+    while (treeTable.children.length <= row) {
+      this.addRow();
+    }
     console.log(name, "at", row, col);
     treeTable.querySelector('[data-row="' + row + '"]').querySelector('[data-col="' + col + '"]').firstChild.innerHTML = name;
     let count = 0;
@@ -222,7 +225,15 @@ function openFile(e) {
   reader.readAsText(file);
 }
 
+function updateRoot() {
+  treeTable.innerHTML = "";
+  let r = document.getElementById("roster").value;
+  console.log("Root is now " + r);
+  f.plot(r, 0, 0);
+}
+
 // MAIN --------------------------------------------------------------------
 console.log("D3 v" + d3.version);
 let treeTable = document.getElementById("tree-table");
 let t;
+let f;

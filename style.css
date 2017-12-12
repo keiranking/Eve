@@ -27,10 +27,8 @@ body {
   /*font-size: 10pt;*/
   font-weight: 400;
   width: 100%;
-  /*left: 0;*/
   top: 0;
   left: 0;
-  /*right: 0;*/
   margin: 0;
   padding: 10px 10px;
   border-bottom: 1px solid #ddd;
@@ -46,12 +44,9 @@ body {
 #toolbar .right {
   float: right;
   margin-right: 20px;
-  /*text-align: right;*/
 }
 
 #toolbar button {
-  /*width: 40px;*/
-  /*height: 25px;*/
   border-radius: 2px;
   background-color: white;
   border: 1px solid white;
@@ -77,6 +72,26 @@ body {
 #toolbar button:hover {
   color: var(--callout);
   border: 1px solid var(--callout);
+}
+
+#toolbar select {
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Arial', sans-serif;
+  font-size: 10pt;
+  margin: 0;
+  padding: 0;
+  line-height: 20pt;
+  border: 1px solid white;
+  color: var(--med-grey);
+  background-color: white;
+}
+
+#toolbar select:hover {
+  border: 1px solid var(--callout);
+  color: var(--callout);
+}
+
+#toolbar select:focus {
+  outline: none;
 }
 
 /*#toolbar button:hover:after {
